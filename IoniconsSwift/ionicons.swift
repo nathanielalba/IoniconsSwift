@@ -17,35 +17,27 @@ private func load(){
 		return
 	}
 	loaded = true
-	let inData = NSData(contentsOfFile: NSBundle(identifier: "com.oncast.IoniconsSwift")!.pathForResource("ionicons", ofType: "ttf")!)
+    let inData = NSData(contentsOfFile: Bundle(identifier: "com.oncase.IoniconsSwift")!.path(forResource: "ionicons", ofType: "ttf")!)
 	var error : Unmanaged<CFError>?
-	let provider = CGDataProviderCreateWithCFData(inData)
-	let font = CGFontCreateWithDataProvider(provider)
-	if !CTFontManagerRegisterGraphicsFont(font, &error) {
+    let provider = CGDataProvider.init(data: inData!)
+    let font = CGFont.init(provider!)
+	if !CTFontManagerRegisterGraphicsFont(font!, &error) {
 		let errorDescription = CFErrorCopyDescription(error!.takeRetainedValue())
 		NSLog("Failed to load font: %@", errorDescription as! String);
 	}
 }
 public enum Ionicons : String {
-	public func label(size: CGFloat, color: UIColor = UIColor.blackColor()) -> UILabel {
+	public func label(size: CGFloat, color: UIColor = UIColor.black) -> UILabel {
 		load()
 		let label = UILabel()
 		label.font = UIFont(name: "ionicons", size: size)
 		label.text = rawValue
 		label.textColor = color
-		label.textAlignment = .Center
-		label.backgroundColor = UIColor.clearColor()
-		label.frame = CGRectMake(0, 0, size, size)
+		label.textAlignment = .center
+		label.backgroundColor = UIColor.clear
+        label.frame = CGRect(x: 0, y: 0, width: size, height: size)
 		label.accessibilityElementsHidden = true
 		return label
-	}
-	public func image(size: CGFloat, color: UIColor = UIColor.blackColor()) -> UIImage {
-		let label = self.label(size, color: color)
-		UIGraphicsBeginImageContextWithOptions(label.bounds.size, false, UIScreen.mainScreen().scale)
-		label.layer.renderInContext(UIGraphicsGetCurrentContext())
-		let image = UIGraphicsGetImageFromCurrentImageContext()
-		UIGraphicsEndImageContext();
-		return image
 	}
 	case None = ""
 	case Alert = "\u{f101}"
